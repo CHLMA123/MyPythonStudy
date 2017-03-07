@@ -18,18 +18,14 @@ try:
 	request = urllib2.Request(url, headers=headers)
 	reponse = urllib2.urlopen(request)
 	content = reponse.read().decode('utf-8')
-	# pattern = re.compile('<div.*?author">.*?<a.*?<img.*?>(.*?)</a>.*?<div.*?'+
-     #                     'content">(.*?)<!--(.*?)-->.*?</div>(.*?)<div class="stats.*?class="number">(.*?)</i>', re.S)
-
 	# 获取了发布人，发布内容
-	pattern = re.compile('<div.*?clearfix">.*?<a.*?<a>*?<h2>(.*?)</h2>>*?<div.*?"content">.*?<span>(.*?)</span>', re.S)
+	pattern = re.compile('<a class="contentHerf.*?>.*?<div class="content">.*?<span>(.*?)</span>', re.S)
 
 	items = re.findall(pattern, content)
 	for item in items:
-		# haveImg = re.search("img", item[3])
-		# if not haveImg:
-		# 	print item[0], item[1], item[2], item[4]
-		print item[0], item[1]
+		replaceBR = re.compile('<br/>')
+		text = re.sub(replaceBR, "\n", item[0])
+		print u"第%d页\t发布内容:\n%s" % (page, item[0])
 except urllib2.URLError, e:
 	if hasattr(e, "code"):
 		print e.code
